@@ -1,19 +1,25 @@
 # Robot Simulator
 
-A TypeScript implementation of the classic Toy Robot coding challenge, demonstrating Object-Oriented Programming principles and clean code architecture.
+A TypeScript application that simulates robot movement on a grid using clean architecture and object-oriented design principles.
 
 ## Overview
 
-This application simulates a robot moving on a rectangular table. The robot accepts commands to move forward or rotate, and reports its final position after executing a sequence of commands.
+Robot Simulator is a technical implementation of the classic Toy Robot coding challenge. The application simulates a robot moving on a rectangular table, accepting commands to move forward or rotate, and reports its final position after executing a sequence of commands.
+
+## Technologies
+
+- **Language:** TypeScript
+- **Runtime:** Node.js
+- **Architecture:** Object-Oriented Programming (OOP)
 
 ## Features
 
-- Place a robot at a specific position with a given orientation
-- Move the robot forward in the direction it's facing
-- Rotate the robot 90° left or right
-- Boundary detection - robot cannot move off the table
-- Configurable table size
-- Command sequence processing
+- Configurable table dimensions (N × M grid)
+- Robot placement at specific coordinates with orientation
+- Movement commands with boundary validation
+- 90° rotation (left/right)
+- Automated test suite
+- Clean separation of concerns
 
 ## Project Structure
 
@@ -39,7 +45,7 @@ robot-simulator/
 
 ## Input Format
 
-The program reads from `input.txt`:
+The program reads configuration from `input.txt`:
 
 ```
 rows cols
@@ -49,34 +55,34 @@ commands
 
 ### Parameters
 
-| Parameter   | Description                                                |
-|-------------|------------------------------------------------------------|
-| `rows`      | Number of rows in the table (first dimension)             |
-| `cols`      | Number of columns in the table (second dimension)         |
-| `row`       | Starting row position (0-indexed from top)                |
-| `col`       | Starting column position (0-indexed from left)             |
-| `direction` | Initial facing direction (N, E, S, or W)                  |
-| `commands`  | Sequence of commands (M, L, R)                            |
+| Parameter   | Type   | Description                                           |
+|-------------|--------|-------------------------------------------------------|
+| `rows`      | number | Number of rows in the table                          |
+| `cols`      | number | Number of columns in the table                      |
+| `row`       | number | Starting row position (0-indexed from top)          |
+| `col`       | number | Starting column position (0-indexed from left)      |
+| `direction` | string | Initial facing direction (N, E, S, or W)            |
+| `commands`  | string | Sequence of commands (M, L, R)                      |
 
 ### Commands
 
-| Command | Description                                      |
-|---------|------------------------------------------------|
-| **M**   | Move forward one tile in current direction     |
-| **L**   | Rotate 90° counter-clockwise (left)            |
-| **R**   | Rotate 90° clockwise (right)                   |
+| Command | Action                                   |
+|---------|------------------------------------------|
+| **M**   | Move forward one tile in current direction |
+| **L**   | Rotate 90° counter-clockwise             |
+| **R**   | Rotate 90° clockwise                     |
 
 ### Direction Rotation
 
-- **Left (L)**: N → W → S → E → N
-- **Right (R)**: N → E → S → W → N
+- **Left (L):** N → W → S → E → N
+- **Right (R):** N → E → S → W → N
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm
+- npm (v9 or higher)
 
 ### Installation
 
@@ -90,7 +96,7 @@ npm install
 npm run dev
 ```
 
-This reads from `input.txt` and outputs the final robot position.
+This command reads from `input.txt` and outputs the final robot position.
 
 ### Running Tests
 
@@ -100,7 +106,7 @@ npm run test
 
 ## Example Usage
 
-### Example 1
+### Example 1: Basic Movement
 
 **Input:**
 ```
@@ -114,7 +120,7 @@ MRMLM
 3 1 S
 ```
 
-### Example 2
+### Example 2: Complex Sequence
 
 **Input:**
 ```
@@ -128,7 +134,7 @@ LMLMMRMMLRM
 3 0 W
 ```
 
-### Edge Case - Robot at Boundary
+### Example 3: Boundary Constraint
 
 **Input:**
 ```
@@ -142,38 +148,51 @@ M
 0 0 N
 ```
 
-The robot remains at position (0, 0) facing North, as moving forward would place it off the table.
+The robot remains at position (0, 0) facing North, as moving forward would place it outside the table boundaries.
 
-## Design Principles
+## Architecture
 
-### Object-Oriented Design
+### Design Principles
 
-- **Encapsulation**: Each class has well-defined responsibilities
-- **Single Responsibility Principle**: Direction logic, table validation, and robot behavior are separated into distinct modules
-- **Separation of Concerns**: Input parsing, simulation logic, and output are independent
+| Principle | Implementation |
+|-----------|----------------|
+| **Encapsulation** | Each class manages its own state and behavior |
+| **Single Responsibility** | Direction logic, table validation, and robot behavior are separated |
+| **Separation of Concerns** | Input parsing, simulation logic, and output are independent modules |
+
+### Class Responsibilities
+
+| Class | Responsibility |
+|-------|----------------|
+| `Direction` | Enum and rotation utilities for cardinal directions |
+| `Table` | Grid boundary validation and configuration |
+| `Robot` | Position tracking, movement, and rotation logic |
+| `Simulator` | Orchestrates parsing, execution, and output generation |
+| `InputParser` | Parses raw input into structured data |
 
 ### Error Handling
 
 - Invalid commands are silently ignored
-- Movement commands that would take the robot off the table are ignored
-- Invalid input format returns empty output
+- Movement commands that would place the robot off the table are blocked
+- Malformed input returns an empty string
 
 ## Test Suite
 
-The test suite validates the following scenarios:
+The test suite includes 9 comprehensive test cases:
 
-| Test Case                           | Input                           | Expected Output |
-|--------------------------------------|--------------------------------|-----------------|
-| Example 1                            | 5 5, 1 2 S, MRMLM             | 3 1 S           |
-| Example 2                            | 5 4, 1 2 N, LMLMMRMMLRM       | 3 0 W           |
-| Robot at edge                        | 5 5, 0 0 N, M                 | 0 0 N           |
-| Rotate right                         | 5 5, 0 0 N, R                 | 0 0 E           |
-| Rotate left                          | 5 5, 0 0 N, L                 | 0 0 W           |
-| Full rotation                        | 5 5, 0 0 N, RRRR              | 0 0 N           |
-| Move east                            | 5 5, 0 0 E, M                 | 0 1 E           |
-| Move south                           | 5 5, 0 0 S, M                 | 1 0 S           |
-| Move west                            | 5 5, 0 1 W, M                 | 0 0 W           |
+| # | Test Case              | Input                    | Expected Output |
+|---|------------------------|-------------------------|-----------------|
+| 1 | Example 1              | 5 5, 1 2 S, MRMLM      | 3 1 S           |
+| 2 | Example 2             | 5 4, 1 2 N, LMLMMRMMLRM| 3 0 W           |
+| 3 | Boundary Constraint   | 5 5, 0 0 N, M          | 0 0 N           |
+| 4 | Rotate Right          | 5 5, 0 0 N, R          | 0 0 E           |
+| 5 | Rotate Left           | 5 5, 0 0 N, L          | 0 0 W           |
+| 6 | Full Rotation         | 5 5, 0 0 N, RRRR      | 0 0 N           |
+| 7 | Move East             | 5 5, 0 0 E, M          | 0 1 E           |
+| 8 | Move South            | 5 5, 0 0 S, M          | 1 0 S           |
+| 9 | Move West             | 5 5, 0 1 W, M          | 0 0 W           |
 
-## Contributor
+
+## Author
 
 Shawal Khan
