@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "node --loader ts-node/esm src/index.ts",
-    "test": "node --loader ts-node/esm test/testCases.ts"
+    "dev": "node --no-warnings --loader ts-node/esm src/index.ts",
+    "test": "node --no-warnings --loader ts-node/esm test/testCases.ts"
   },
   "keywords": ["robot", "simulator", "toy"],
   "author": "",
